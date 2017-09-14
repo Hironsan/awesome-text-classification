@@ -1,31 +1,15 @@
-# Deep Classification
-Deep Classification is text classification project. The purpose is to verify the effectiveness of word embeddings for a variety of text classification tasks.
+# awesome-text-classification[![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/sindresorhus/awesome)
+A curated list of awesome text classification models tutorials, projects and communities.
+Please feel free to pull requests to add links.
 
-The list of text is as follows:
-* News Category Classification
-* Sentiment Analysis
-* Question Type Classification
+## Table of Contents
+* **[Papers and Implementations](#papers-and-implementations)**
+* **[Datasets](#datasets)**
+* **[Articles](#articles)**
 
-Each task is conducted for some datasets. For example, the data sets of sentiment analysis includes Movie Review, Customer Review, opinion and so on. 
 
-## Installation
-To install required modules, simply:
+## Papers and Implementations
 
-```
-$ make requirements
-```
+## Datasets
 
-or
-
-```
-$ pip install -r requirements.txt
-```
-
-## Usage
-Move to notebooks directory and run Jupyter Notebook.
-
-## License
-[MIT](https://github.com/Hironsan/DeepClassification/blob/master/LICENSE)
-
-## Author
-[Hironsan](https://github.com/Hironsan) 
+## Articles
