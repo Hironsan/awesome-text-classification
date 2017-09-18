@@ -16,7 +16,7 @@ Please feel free to pull requests to add links.
 * Bag of Tricks for Efficient Text Classification (2016), Joulin, Armand, et al.[[pdf]](https://arxiv.org/abs/1404.2188)
 * Very Deep Convolutional Networks for Text Classification (2017), Conneau, Alexis, et al.[[pdf]](https://arxiv.org/abs/1606.01781)
 * FastText.zip: Compressing Text Classification Models (2017), Joulin, Armand, et al.[[pdf]](https://arxiv.org/abs/1612.03651)
-
+* Character-level Convolutional Networks for Text Classification (2015), Zhang, Xiang, Junbo Zhao, and Yann LeCun.[[pdf]](https://arxiv.org/abs/1509.01626)
 
 ## Datasets
 
