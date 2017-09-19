@@ -7,6 +7,7 @@ class ModelConfig(object):
                  nb_filter=256,
                  dense_units=(1024, 1024),
                  maxlen=1014,
+                 keep_prob=0.5,
                  ):
         self.vocab_size = vocab_size
         self.nb_class = nb_class
@@ -14,6 +15,7 @@ class ModelConfig(object):
         self.nb_filter = nb_filter
         self.dense_units = dense_units
         self.maxlen = maxlen
+        self.keep_prob = keep_prob
 
 
 class TrainingConfig(object):

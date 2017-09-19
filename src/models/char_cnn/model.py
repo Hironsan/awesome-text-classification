@@ -1,8 +1,8 @@
-from keras.layers import Input, Conv1D, Dense, MaxPool1D, Flatten
+from keras.layers import Input, Conv1D, Dense, MaxPool1D, Flatten, Dropout
 from keras.models import Model
 
 
-def build_model(kernel_sizes, dense_units, vocab_size, nb_filter, nb_class):
+def build_model(kernel_sizes, dense_units, vocab_size, nb_filter, nb_class, keep_prob):
     maxlen = 1014
     inputs = Input(batch_shape=(None, maxlen, vocab_size))
 
@@ -20,7 +20,9 @@ def build_model(kernel_sizes, dense_units, vocab_size, nb_filter, nb_class):
     pool3 = Flatten()(pool3)
 
     fc1 = Dense(dense_units[0], activation='relu')(pool3)
+    fc1 = Dropout(keep_prob)(fc1)
     fc2 = Dense(dense_units[1], activation='relu')(fc1)
+    fc2 = Dropout(keep_prob)(fc2)
     pred = Dense(nb_class, activation='softmax')(fc2)
 
     model = Model(inputs=[inputs], outputs=[pred])
