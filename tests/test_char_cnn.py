@@ -14,21 +14,6 @@ class TestCharCNN(unittest.TestCase):
     def setUp(self):
         self.filename = os.path.join(os.path.dirname(__file__), 'data/test.csv')
 
-    def test_build(self):
-        X, y = load_csv(self.filename)
-        p = Preprocessor()
-        p.fit(X, y)
-        model_config = ModelConfig(vocab_size=len(p.vocab), nb_class=len(p.classes))
-        model = build_model(model_config.kernel_sizes,
-                            model_config.dense_units,
-                            model_config.vocab_size,
-                            model_config.nb_filter,
-                            model_config.nb_class,
-                            model_config.keep_prob)
-        model.compile(loss='categorical_crossentropy',
-                      optimizer=Adam,
-                      metrics=['accuracy'])
-
     def test_train(self):
         X_train, y_train = load_csv(self.filename)
         X_valid, y_valid = load_csv(self.filename)
@@ -44,7 +29,8 @@ class TestCharCNN(unittest.TestCase):
                             model_config.vocab_size,
                             model_config.nb_filter,
                             model_config.nb_class,
-                            model_config.keep_prob)
+                            model_config.keep_prob,
+                            model_config.maxlen)
         model.compile(loss='categorical_crossentropy',
                       optimizer=Adam(),
                       metrics=['accuracy'])

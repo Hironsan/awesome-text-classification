@@ -2,8 +2,8 @@ from keras.layers import Input, Conv1D, Dense, MaxPool1D, Flatten, Dropout
 from keras.models import Model
 
 
-def build_model(kernel_sizes, dense_units, vocab_size, nb_filter, nb_class, keep_prob):
-    maxlen = 1014
+def build_model(kernel_sizes, dense_units, vocab_size,
+                nb_filter, nb_class, keep_prob, maxlen=1014):
     inputs = Input(batch_shape=(None, maxlen, vocab_size))
 
     conv1 = Conv1D(nb_filter, kernel_sizes[0], activation='relu')(inputs)
