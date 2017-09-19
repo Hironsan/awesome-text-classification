@@ -23,7 +23,8 @@ class TestCharCNN(unittest.TestCase):
                             model_config.dense_units,
                             model_config.vocab_size,
                             model_config.nb_filter,
-                            model_config.nb_class)
+                            model_config.nb_class,
+                            model_config.keep_prob)
         model.compile(loss='categorical_crossentropy',
                       optimizer=Adam,
                       metrics=['accuracy'])
