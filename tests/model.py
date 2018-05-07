@@ -8,7 +8,7 @@ from __future__ import print_function
 from keras.preprocessing import sequence
 from keras.datasets import imdb
 
-from src.model import KimCNN, SimpleCNN
+from src.model import SimpleCNN
 
 # set parameters:
 max_features = 5000
@@ -29,11 +29,10 @@ print('x_train shape:', x_train.shape)
 print('x_test shape:', x_test.shape)
 
 print('Build model...')
-# model = KimCNN(max_sequence_length=maxlen, vocab_size=max_features, num_tags=1)
 model = SimpleCNN(max_sequence_length=maxlen, vocab_size=max_features,
-                  num_tags=1, embedding_dim=embedding_dims)
+                  num_tags=2, embedding_dim=embedding_dims)
 model = model.build()
-model.compile(loss='binary_crossentropy',
+model.compile(loss='sparse_categorical_crossentropy',
               optimizer='adam',
               metrics=['accuracy'])
 model.fit(x_train, y_train,

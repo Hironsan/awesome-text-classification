@@ -27,7 +27,7 @@ class BaseModel(object):
 
 class SimpleCNN(BaseModel):
 
-    def __init__(self, max_sequence_length, vocab_size, num_tags, embedding_dim=100,
+    def __init__(self, max_sequence_length, vocab_size, num_tags, weights=None, embedding_dim=100,
                  filter_sizes=(3, 4, 5), num_filters=(100, 100, 100),
                  num_units=100, keep_prob=0.5):
         super(KimCNN).__init__()
@@ -40,16 +40,23 @@ class SimpleCNN(BaseModel):
         self.num_units = num_units
         self.num_tags = num_tags
         self.keep_prob = keep_prob
+        self.weights = weights
 
     def build(self):
         sequence_input = Input(shape=(self.max_sequence_length,), dtype='int32')
-        embedding = Embedding(
-            self.vocab_size + 1,  # due to mask_zero
-            self.embedding_dim,
-            input_length=self.max_sequence_length,
-            # weights=[weight],
-            trainable=True
-        )(sequence_input)
+        if self.weights is None:
+            embedding = Embedding(
+                self.vocab_size + 1,  # due to mask_zero
+                self.embedding_dim,
+                input_length=self.max_sequence_length,
+            )(sequence_input)
+        else:
+            embedding = Embedding(
+                self.weights.shape[0],  # due to mask_zero
+                self.weights.shape[1],
+                input_length=self.max_sequence_length,
+                weights=[self.weights],
+            )(sequence_input)
 
         convs = []
         for filter_size, num_filter in zip(self.filter_sizes, self.num_filters):
@@ -63,7 +70,7 @@ class SimpleCNN(BaseModel):
         z = Dense(self.num_units)(z)
         z = Dropout(self.keep_prob)(z)
         z = Activation('relu')(z)
-        pred = Dense(self.num_tags, activation='sigmoid')(z)
+        pred = Dense(self.num_tags, activation='softmax')(z)
         model = Model(inputs=[sequence_input], outputs=[pred])
 
         return model
@@ -71,8 +78,8 @@ class SimpleCNN(BaseModel):
 
 class KimCNN(BaseModel):
 
-    def __init__(self, max_sequence_length, vocab_size, num_tags, embedding_dim=100,
-                 filter_sizes=(3, 4, 5), num_filters=(100, 100, 100),
+    def __init__(self, max_sequence_length, vocab_size, num_tags, weights=None,
+                 embedding_dim=100, filter_sizes=(3, 4, 5), num_filters=(100, 100, 100),
                  num_units=100, keep_prob=0.5):
         super(KimCNN).__init__()
         assert len(filter_sizes) == len(num_filters)
@@ -84,26 +91,42 @@ class KimCNN(BaseModel):
         self.num_units = num_units
         self.num_tags = num_tags
         self.keep_prob = keep_prob
+        self.weights = weights
 
     def build(self):
         sequence_input = Input(shape=(self.max_sequence_length,), dtype='int32')
 
-        embeddings_static = Embedding(
-            self.vocab_size + 1,  # due to mask_zero
-            self.embedding_dim,
-            input_length=self.max_sequence_length,
-            # weights=[weight],
-            trainable=False
-        )(sequence_input)
+        if self.weights is None:
+            embeddings_static = Embedding(
+                self.vocab_size + 1,  # due to mask_zero
+                self.embedding_dim,
+                input_length=self.max_sequence_length,
+                # weights=[weight],
+                trainable=False
+            )(sequence_input)
+            embeddings_non_static = Embedding(
+                self.vocab_size + 1,  # due to mask_zero
+                self.embedding_dim,
+                input_length=self.max_sequence_length,
+                # weights=[weight],
+                trainable=True
+            )(sequence_input)
+        else:
+            embeddings_static = Embedding(
+                self.weights.shape[0],  # due to mask_zero
+                self.weights.shape[1],
+                input_length=self.max_sequence_length,
+                weights=[self.weights],
+                trainable=False
+            )(sequence_input)
+            embeddings_non_static = Embedding(
+                self.weights.shape[0],  # due to mask_zero
+                self.weights.shape[1],
+                input_length=self.max_sequence_length,
+                weights=[self.weights],
+                trainable=True
+            )(sequence_input)
         embeddings_static = Dropout(self.keep_prob)(embeddings_static)
-
-        embeddings_non_static = Embedding(
-            self.vocab_size + 1,  # due to mask_zero
-            self.embedding_dim,
-            input_length=self.max_sequence_length,
-            # weights=[weight],
-            trainable=True
-        )(sequence_input)
         embeddings_non_static = Dropout(self.keep_prob)(embeddings_non_static)
 
         convs = []
