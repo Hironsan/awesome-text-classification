@@ -8,7 +8,7 @@ from __future__ import print_function
 from keras.preprocessing import sequence
 from keras.datasets import imdb
 
-from src.model import SimpleCNN
+from src.model import SimpleCNN, StackedLSTM
 
 # set parameters:
 max_features = 5000
@@ -29,8 +29,8 @@ print('x_train shape:', x_train.shape)
 print('x_test shape:', x_test.shape)
 
 print('Build model...')
-model = SimpleCNN(max_sequence_length=maxlen, vocab_size=max_features,
-                  num_tags=2, embedding_dim=embedding_dims)
+model = StackedLSTM(max_sequence_length=maxlen, vocab_size=max_features,
+                    num_class=2, embedding_dim=embedding_dims)
 model = model.build()
 model.compile(loss='sparse_categorical_crossentropy',
               optimizer='adam',

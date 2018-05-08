@@ -153,3 +153,41 @@ class KimCNN(BaseModel):
         model = Model(inputs=[sequence_input], outputs=[pred])
 
         return model
+
+
+class StackedLSTM(BaseModel):
+
+    def __init__(self, max_sequence_length, vocab_size, num_class, weights=None,
+                 embedding_dim=100, lstm_units=(32, 32, 32), keep_prob=0.5):
+        super(StackedLSTM).__init__()
+        self.max_sequence_length = max_sequence_length
+        self.vocab_size = vocab_size
+        self.embedding_dim = embedding_dim
+        self.lstm_units = lstm_units
+        self.num_class = num_class
+        self.keep_prob = keep_prob
+        self.weights = weights
+
+    def build(self):
+        sequence_input = Input(shape=(self.max_sequence_length,), dtype='int32')
+        if self.weights is None:
+            embedded_sequence = Embedding(
+                self.vocab_size + 1,  # due to mask_zero
+                self.embedding_dim,
+                input_length=self.max_sequence_length,
+            )(sequence_input)
+        else:
+            embedded_sequence = Embedding(
+                self.weights.shape[0],  # due to mask_zero
+                self.weights.shape[1],
+                input_length=self.max_sequence_length,
+                weights=[self.weights],
+            )(sequence_input)
+        z = embedded_sequence
+        for i, num_units in enumerate(self.lstm_units, 1):
+            z = LSTM(num_units, return_sequences=(i != len(self.lstm_units)))(z)
+        z = Dropout(self.keep_prob)(z)
+        pred = Dense(self.num_class, activation='softmax')(z)
+        model = Model(inputs=[sequence_input], outputs=[pred])
+
+        return model
